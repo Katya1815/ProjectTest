@@ -1,0 +1,68 @@
+﻿<Page x:Class="Restoran.Pages.OrdersPage"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+      xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+      xmlns:local="clr-namespace:Restoran.Pages"
+      mc:Ignorable="d" 
+       d:DesignHeight="500" d:DesignWidth="900"
+      Title="Заказы">
+
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+
+        <!-- Панель поиска и фильтров -->
+        <StackPanel Grid.Row="0" Margin="10" Orientation="Horizontal">
+            <TextBox x:Name="SearchBox" Width="200" Margin="5" 
+                     TextChanged="SearchBox_TextChanged" 
+                     PlaceholderText="Поиск по номеру столика..."/>
+            <ComboBox x:Name="StatusFilter" Width="150" Margin="5"
+                      SelectionChanged="FilterChanged">
+                <ComboBoxItem Content="Все статусы"/>
+                <ComboBoxItem Content="Новый"/>
+                <ComboBoxItem Content="В процессе"/>
+                <ComboBoxItem Content="Готов"/>
+                <ComboBoxItem Content="Оплачен"/>
+            </ComboBox>
+            <DatePicker x:Name="DateFilter" Width="150" Margin="5"
+                        SelectedDateChanged="FilterChanged"/>
+            <Button Content="Сбросить фильтры" Click="ResetFilters_Click" Margin="5"/>
+        </StackPanel>
+
+        <!-- Список заказов -->
+        <DataGrid x:Name="OrdersGrid" Grid.Row="1" Margin="10" AutoGenerateColumns="False"
+                  CanUserAddRows="False" IsReadOnly="True">
+            <DataGrid.Columns>
+                <DataGridTextColumn Header="Номер" Binding="{Binding Id_заказа}" Width="80"/>
+                <DataGridTextColumn Header="Столик" Binding="{Binding Номер_столика}" Width="80"/>
+                <DataGridTextColumn Header="Клиент" Binding="{Binding Заказчик}" Width="150"/>
+                <DataGridTextColumn Header="Дата" Binding="{Binding Дата_принятия_заказа}" Width="100"/>
+                <DataGridTextColumn Header="Сумма" Binding="{Binding Сумма, StringFormat={}{0:C}}" Width="100"/>
+                <DataGridTextColumn Header="Статус" Binding="{Binding Статус}" Width="100"/>
+                <DataGridTemplateColumn Header="Действия" Width="150">
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <StackPanel Orientation="Horizontal">
+                                <Button Content="Просмотр" Margin="2" Padding="5" 
+                                        Click="ViewOrderDetails_Click" Tag="{Binding Id_заказа}"/>
+                                <Button Content="Изменить" Margin="2" Padding="5"
+                                        Click="EditOrder_Click" Tag="{Binding Id_заказа}"/>
+                            </StackPanel>
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
+            </DataGrid.Columns>
+        </DataGrid>
+
+        <!-- Кнопки управления -->
+        <StackPanel Grid.Row="2" Orientation="Horizontal" HorizontalAlignment="Right" Margin="10">
+            <Button Content="Назад" Click="Back_Click" Margin="5" Padding="10,5"/>
+            <Button Content="Обновить" Click="Refresh_Click" Margin="5" Padding="10,5"/>
+            <Button Content="Новый заказ" Click="NewOrder_Click" Margin="5" Padding="10,5"/>
+        </StackPanel>
+    </Grid>
+</Page>
