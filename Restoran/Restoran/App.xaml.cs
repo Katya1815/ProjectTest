@@ -9,8 +9,22 @@ namespace Restoran
     /// </summary>
     public partial class App : Application
     {
-        //public static Model.Restoran1Context Context { get; set; } = new Model.Restoran1Context();
-        //public static Model.User CurrentUser { get; set; } = null;
+        public static ReastoranContext Context { get; } = new ReastoranContext();
+
+        protected override void OnStartup(StartupEventArgs e)
+        {
+            base.OnStartup(e);
+
+            // Проверяем подключение к БД
+            try
+            {
+                Context.Database.CanConnect();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Ошибка подключения к БД: {ex.Message}");
+            }
+        }
     }
 
 }

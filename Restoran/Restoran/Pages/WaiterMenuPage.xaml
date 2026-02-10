@@ -1,0 +1,28 @@
+﻿<Page x:Class="Restoran.Pages.WaiterMenuPage"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+      xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+      xmlns:local="clr-namespace:Restoran.Pages"
+      mc:Ignorable="d" 
+      d:DesignHeight="500" d:DesignWidth="900"
+       Title="Меню официанта">
+
+    <Grid Background="#FFF0F0F0">
+        <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center" Width="400">
+            <TextBlock Text="Меню официанта" FontSize="28" FontWeight="Bold" 
+                       HorizontalAlignment="Center" Margin="0,0,0,30"/>
+
+            <Button Content="Просмотреть заказы" Click="ViewOrders_Click" 
+                    Style="{StaticResource MenuButtonStyle}" Margin="0,10"/>
+            <Button Content="Создать новый заказ" Click="CreateOrder_Click"
+                    Style="{StaticResource MenuButtonStyle}" Margin="0,10"/>
+            <Button Content="Свободные столики" Click="ViewTables_Click"
+                    Style="{StaticResource MenuButtonStyle}" Margin="0,10"/>
+            <Button Content="Меню ресторана" Click="ViewMenu_Click"
+                    Style="{StaticResource MenuButtonStyle}" Margin="0,10"/>
+            <Button Content="Выйти" Click="Logout_Click"
+                    Style="{StaticResource LogoutButtonStyle}" Margin="0,30"/>
+        </StackPanel>
+    </Grid>
+</Page>
