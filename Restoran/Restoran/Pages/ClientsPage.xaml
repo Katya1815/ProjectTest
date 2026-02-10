@@ -1,0 +1,298 @@
+﻿<Page x:Class="Restoran.Pages.ClientsPage"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+      xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+      xmlns:local="clr-namespace:Restoran.Pages"
+      mc:Ignorable="d" 
+      d:DesignHeight="500" d:DesignWidth="900"
+     Title="Клиенты"
+      Loaded="Page_Loaded">
+
+    <Grid Background="#FFF5F5F5">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+
+        <!-- Панель управления -->
+        <Border Grid.Row="0" Background="#FF673AB7" Padding="10">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="Auto"/>
+                </Grid.ColumnDefinitions>
+
+                <TextBlock Text="Клиенты ресторана" 
+                           Foreground="White" 
+                           FontSize="20" 
+                           FontWeight="Bold"
+                           VerticalAlignment="Center"/>
+
+                <StackPanel Grid.Column="1" Orientation="Horizontal">
+                    <Button Content="Добавить клиента" 
+                            Click="AddClient_Click"
+                            Background="#FF4CAF50"
+                            Foreground="White"
+                            Padding="10,5"
+                            Margin="5,0"/>
+                    <Button Content="Импортировать" 
+                            Click="ImportClients_Click"
+                            Background="#FF2196F3"
+                            Foreground="White"
+                            Padding="10,5"
+                            Margin="5,0"/>
+                </StackPanel>
+            </Grid>
+        </Border>
+
+        <!-- Панель инструментов -->
+        <StackPanel Grid.Row="0" Margin="10,60,10,10" Orientation="Horizontal">
+            <TextBox x:Name="SearchTextBox" 
+                     Width="300" 
+                     Height="35"
+                     Margin="5"
+                     Padding="10,0"
+                     FontSize="14"
+                     TextChanged="SearchTextBox_TextChanged"
+                     PlaceholderText="Поиск по ФИО, телефону или примечаниям..."/>
+
+            <ComboBox x:Name="SortComboBox"
+                      Width="150"
+                      Height="35"
+                      Margin="5"
+                      FontSize="14"
+                      SelectionChanged="SortChanged">
+                <ComboBoxItem Content="По ФИО (А-Я)"/>
+                <ComboBoxItem Content="По ФИО (Я-А)"/>
+                <ComboBoxItem Content="По дате регистрации"/>
+                <ComboBoxItem Content="По количеству заказов"/>
+            </ComboBox>
+
+            <CheckBox x:Name="ShowOnlyWithOrdersCheckBox"
+                      Content="Только с заказами"
+                      Margin="10,0,5,0"
+                      VerticalAlignment="Center"
+                      Checked="FilterChanged"
+                      Unchecked="FilterChanged"/>
+
+            <Button Content="Фильтры" 
+                    Click="ShowFilters_Click"
+                    Background="#FF9C27B0"
+                    Foreground="White"
+                    Padding="10,5"
+                    Margin="5"/>
+
+            <Button Content="Сбросить" 
+                    Click="ResetFilters_Click"
+                    Background="#FF9E9E9E"
+                    Foreground="White"
+                    Padding="10,5"
+                    Margin="5"/>
+        </StackPanel>
+
+        <!-- Таблица клиентов -->
+        <DataGrid x:Name="ClientsDataGrid"
+                  Grid.Row="1"
+                  Margin="10"
+                  AutoGenerateColumns="False"
+                  CanUserAddRows="False"
+                  IsReadOnly="True"
+                  SelectionMode="Single"
+                  SelectionUnit="FullRow"
+                  GridLinesVisibility="None"
+                  RowBackground="#FFFFFFFF"
+                  AlternatingRowBackground="#FFF5F5F5"
+                  BorderBrush="#FFDDDDDD"
+                  BorderThickness="1"
+                  FontSize="14"
+                  MouseDoubleClick="ClientsDataGrid_MouseDoubleClick">
+
+            <DataGrid.Columns>
+                <!-- Аватар -->
+                <DataGridTemplateColumn Header="" Width="50">
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <Ellipse Width="32" Height="32" 
+                                     HorizontalAlignment="Center"
+                                     VerticalAlignment="Center">
+                                <Ellipse.Fill>
+                                    <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
+                                        <GradientStop Color="#FF673AB7" Offset="0"/>
+                                        <GradientStop Color="#FF9C27B0" Offset="1"/>
+                                    </LinearGradientBrush>
+                                </Ellipse.Fill>
+                                <Ellipse.Style>
+                                    <Style TargetType="Ellipse">
+                                        <Style.Triggers>
+                                            <DataTrigger Binding="{Binding Количество_заказов}" Value="0">
+                                                <Setter Property="Opacity" Value="0.5"/>
+                                            </DataTrigger>
+                                        </Style.Triggers>
+                                    </Style>
+                                </Ellipse.Style>
+                            </Ellipse>
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
+
+                <!-- ФИО -->
+                <DataGridTextColumn Header="ФИО" Width="250">
+                    <DataGridTextColumn.Binding>
+                        <MultiBinding StringFormat="{}{0} {1} {2}">
+                            <Binding Path="Фамилия"/>
+                            <Binding Path="Имя"/>
+                            <Binding Path="Отчество"/>
+                        </MultiBinding>
+                    </DataGridTextColumn.Binding>
+                </DataGridTextColumn>
+
+                <!-- Контактная информация -->
+                <DataGridTemplateColumn Header="Контакты" Width="200">
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <StackPanel Margin="5">
+                                <TextBlock Text="{Binding Номер_телефона}" 
+                                           FontWeight="SemiBold"
+                                           Foreground="#FF333333"/>
+                                <TextBlock Text="{Binding Email}" 
+                                           FontSize="12"
+                                           Foreground="#FF666666"/>
+                            </StackPanel>
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
+
+                <!-- Дата регистрации -->
+                <DataGridTextColumn Header="Регистрация" 
+                                    Binding="{Binding Дата_регистрации, StringFormat=\{0:dd.MM.yyyy\}}" 
+                                    Width="100"/>
+
+                <!-- Количество заказов -->
+                <DataGridTextColumn Header="Заказов" Width="80">
+                    <DataGridTextColumn.Binding>
+                        <Binding Path="Количество_заказов">
+                            <Binding.Converter>
+                                <local:OrdersCountConverter/>
+                            </Binding.Converter>
+                        </Binding>
+                    </DataGridTextColumn.Binding>
+                </DataGridTextColumn>
+
+                <!-- Общая сумма заказов -->
+                <DataGridTextColumn Header="Сумма заказов" Width="120">
+                    <DataGridTextColumn.Binding>
+                        <Binding Path="Общая_сумма_заказов" StringFormat="{}{0:C}">
+                            <Binding.Converter>
+                                <local:CurrencyColorConverter/>
+                            </Binding.Converter>
+                        </Binding>
+                    </DataGridTextColumn.Binding>
+                </DataGridTextColumn>
+
+                <!-- Статус -->
+                <DataGridTemplateColumn Header="Статус" Width="120">
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <Border CornerRadius="10" 
+                                    Padding="8,3" 
+                                    HorizontalAlignment="Center"
+                                    Background="{Binding Статус, Converter={StaticResource StatusToColorConverter}}">
+                                <TextBlock Text="{Binding Статус}" 
+                                           Foreground="White"
+                                           FontWeight="Bold"
+                                           HorizontalAlignment="Center"/>
+                            </Border>
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
+
+                <!-- Примечания -->
+                <DataGridTextColumn Header="Примечания" 
+                                    Binding="{Binding Примечания}" 
+                                    Width="200">
+                    <DataGridTextColumn.ElementStyle>
+                        <Style TargetType="TextBlock">
+                            <Setter Property="TextWrapping" Value="Wrap"/>
+                            <Setter Property="MaxHeight" Value="50"/>
+                            <Setter Property="TextTrimming" Value="CharacterEllipsis"/>
+                        </Style>
+                    </DataGridTextColumn.ElementStyle>
+                </DataGridTextColumn>
+
+                <!-- Действия -->
+                <DataGridTemplateColumn Header="Действия" Width="180">
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                                <Button Content="📋" 
+                                        ToolTip="История заказов"
+                                        Click="ViewOrdersHistory_Click"
+                                        Tag="{Binding Id_клиента}"
+                                        Style="{StaticResource IconButtonStyle}"
+                                        Margin="2"/>
+
+                                <Button Content="✏️" 
+                                        ToolTip="Редактировать"
+                                        Click="EditClient_Click"
+                                        Tag="{Binding Id_клиента}"
+                                        Style="{StaticResource IconButtonStyle}"
+                                        Margin="2"/>
+
+                                <Button Content="📞" 
+                                        ToolTip="Позвонить"
+                                        Click="CallClient_Click"
+                                        Tag="{Binding Номер_телефона}"
+                                        Style="{StaticResource IconButtonStyle}"
+                                        Margin="2"/>
+
+                                <Button Content="📧" 
+                                        ToolTip="Отправить email"
+                                        Click="EmailClient_Click"
+                                        Tag="{Binding Email}"
+                                        Style="{StaticResource IconButtonStyle}"
+                                        Margin="2"/>
+                            </StackPanel>
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
+            </DataGrid.Columns>
+        </DataGrid>
+
+        <!-- Статистика -->
+        <Border Grid.Row="2" Background="#FFF0F0F0" BorderBrush="#FFDDDDDD" BorderThickness="0,1,0,0">
+            <StackPanel Orientation="Horizontal" Margin="10">
+                <TextBlock Text="{Binding ElementName=ClientsDataGrid, Path=Items.Count, StringFormat=Всего клиентов: {0}}"
+                           FontWeight="Bold"
+                           Margin="0,0,20,0"/>
+
+                <TextBlock x:Name="StatisticsText"
+                           Foreground="#FF666666"/>
+
+                <TextBlock x:Name="RevenueText"
+                           Foreground="#FF4CAF50"
+                           FontWeight="Bold"
+                           Margin="20,0,0,0"/>
+            </StackPanel>
+        </Border>
+
+        <!-- Панель кнопок навигации -->
+        <StackPanel Grid.Row="2" Orientation="Horizontal" HorizontalAlignment="Right" Margin="10">
+            <Button Content="📊 Отчет" 
+                    Click="GenerateReport_Click"
+                    Style="{StaticResource PrimaryButtonStyle}"
+                    Margin="5"/>
+
+            <Button Content="⟳ Обновить" 
+                    Click="Refresh_Click"
+                    Style="{StaticResource PrimaryButtonStyle}"
+                    Margin="5"/>
+
+            <Button Content="← Назад" 
+                    Click="Back_Click"
+                    Style="{StaticResource SecondaryButtonStyle}"
+                    Margin="5"/>
+        </StackPanel>
+    </Grid>
+</Page>
