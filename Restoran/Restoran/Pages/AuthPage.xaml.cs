@@ -19,8 +19,10 @@ namespace Restoran.Pages
 
             if (string.IsNullOrEmpty(login) || string.IsNullOrEmpty(password))
             {
-                MessageBox.Show("Все поля должны быть заполнены!", "Ошибка!",
-                    MessageBoxButton.OK, MessageBoxImage.Warning);
+                MessageBox.Show("Все поля должны быть заполнены!",
+                    "Ошибка!",
+                    MessageBoxButton.OK,
+                    MessageBoxImage.Warning);
                 return;
             }
 
@@ -29,8 +31,10 @@ namespace Restoran.Pages
 
             if (user == null)
             {
-                MessageBox.Show("Неверный логин или пароль!", "Ошибка входа!",
-                    MessageBoxButton.OK, MessageBoxImage.Error);
+                MessageBox.Show("Неверный логин или пароль!",
+                    "Ошибка входа!",
+                    MessageBoxButton.OK,
+                    MessageBoxImage.Error);
                 TBoxLogin.Clear();
                 TBoxPassword.Clear();
                 return;
@@ -38,7 +42,8 @@ namespace Restoran.Pages
 
             var role = App.Context.Ролиs.FirstOrDefault(r => r.IdРоли == user.IdРоли);
 
-            if (role != null && (role.IdРоли == 1 || role.НаименованиеРоли.ToLower().Contains("админ")))
+            if (role != null && (role.IdРоли == 5 ||
+                (role.НаименованиеРоли != null && role.НаименованиеРоли.ToLower().Contains("админ"))))
             {
                 App.CurrentUser = user;
 
@@ -51,10 +56,13 @@ namespace Restoran.Pages
             }
             else
             {
-                MessageBox.Show("Недостаточно прав для входа в систему!", "Ошибка доступа",
-                    MessageBoxButton.OK, MessageBoxImage.Error);
+                MessageBox.Show("Недостаточно прав для входа в систему!",
+                    "Ошибка доступа",
+                    MessageBoxButton.OK,
+                    MessageBoxImage.Error);
                 App.CurrentUser = null;
             }
+
             TBoxLogin.Clear();
             TBoxPassword.Clear();
         }

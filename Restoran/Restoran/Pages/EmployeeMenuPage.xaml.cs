@@ -2,36 +2,82 @@
 using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
-using RestoranApi.Models;
+using Microsoft.EntityFrameworkCore;
 
 namespace Restoran.Pages
 {
     public partial class EmployeeMenuPage : Page
     {
-        private RestoranIs32Context _context;
-
         public EmployeeMenuPage()
         {
             InitializeComponent();
-            _context = App.Context;
-            LoadEmployeeInfo();
+
+            // Проверка авторизации
+            if (App.CurrentUser == null)
+            {
+                NavigationService?.Navigate(new AuthPage());
+                return;
+            }
+
+            // Отображение информации о текущем пользователе
+            DisplayUserInfo();
             LoadStatistics();
         }
 
-        private void LoadEmployeeInfo()
+        private void DisplayUserInfo()
         {
-            if (App.CurrentUser != null)
+            try
             {
-                var employee = App.CurrentUser;
-                TxtEmployeeName.Text = $"{employee.Фамилия} {employee.Имя} {employee.Отчество}";
+                // Полное имя сотрудника
+                TxtEmployeeName.Text = $"{App.CurrentUser.Фамилия} {App.CurrentUser.Имя}";
 
-                var position = _context.Должностиs
-                    .FirstOrDefault(d => d.IdДолжности == employee.IdДолжности);
-
-                if (position != null)
+                // Добавляем отчество, если оно есть
+                if (!string.IsNullOrEmpty(App.CurrentUser.Отчество))
                 {
-                    TxtEmployeePosition.Text = $"Должность: {position.НаименованиеДолжности}";
+                    TxtEmployeeName.Text += $" {App.CurrentUser.Отчество}";
                 }
+
+                // Получаем наименование должности через навигационное свойство
+                if (App.CurrentUser.IdДолжностиNavigation != null)
+                {
+                    // ИСПРАВЛЕНО: НаименованиеДолжности вместо Название
+                    TxtEmployeePosition.Text = App.CurrentUser.IdДолжностиNavigation.НаименованиеДолжности ?? "Сотрудник";
+                }
+                else
+                {
+                    // Если навигационное свойство не загружено, пытаемся загрузить отдельно
+                    LoadPosition();
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Ошибка загрузки данных пользователя: {ex.Message}",
+                    "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
+                TxtEmployeeName.Text = "Сотрудник";
+                TxtEmployeePosition.Text = "Должность не указана";
+            }
+        }
+
+        private void LoadPosition()
+        {
+            try
+            {
+                if (App.CurrentUser.IdДолжности.HasValue)
+                {
+                    // ИСПРАВЛЕНО: НаименованиеДолжности вместо Название
+                    var position = App.Context.Должностиs
+                        .FirstOrDefault(d => d.IdДолжности == App.CurrentUser.IdДолжности.Value);
+
+                    TxtEmployeePosition.Text = position?.НаименованиеДолжности ?? "Должность не указана";
+                }
+                else
+                {
+                    TxtEmployeePosition.Text = "Должность не указана";
+                }
+            }
+            catch
+            {
+                TxtEmployeePosition.Text = "Сотрудник";
             }
         }
 
@@ -39,55 +85,72 @@ namespace Restoran.Pages
         {
             try
             {
-                var today = DateOnly.FromDateTime(DateTime.Now);
-                int ordersCount = _context.Заказs
-                    .Count(z => z.ДатаПринятияЗаказа == today);
-                TxtOrdersCount.Text = $"Заказов сегодня: {ordersCount}";
+                // Получаем текущую дату для фильтрации заказов за сегодня
+                var today = DateOnly.FromDateTime(DateTime.Today);
 
-                int dishesCount = _context.Менюs
-                    .Count(m => m.ДоступноДляЗаказа == true);
-                TxtDishesCount.Text = $"Активных блюд: {dishesCount}";
+                // Подсчет заказов за сегодня
+                int todayOrdersCount = App.Context.Заказs
+                    .Count(o => o.ДатаПринятияЗаказа == today);
+
+                TxtOrdersCount.Text = $"Заказов сегодня: {todayOrdersCount}";
+
+                // Подсчет активных блюд
+                int activeDishesCount = App.Context.Менюs.Count();
+                TxtDishesCount.Text = $"Активных блюд: {activeDishesCount}";
             }
             catch (Exception ex)
             {
-                TxtOrdersCount.Text = $"Ошибка: {ex.Message}";
+                TxtOrdersCount.Text = "Заказов сегодня: ошибка загрузки";
+                TxtDishesCount.Text = "Активных блюд: ошибка загрузки";
             }
         }
 
+        // Обработчик для кнопки "Заказы"
         private void BtnOrders_Click(object sender, RoutedEventArgs e)
         {
-            MessageBox.Show("Раздел управления заказами", "Заказы",
-                MessageBoxButton.OK, MessageBoxImage.Information);
+            NavigationService?.Navigate(new OrdersPage());
         }
 
+        // Обработчик для кнопки "Меню и блюда"
         private void BtnMenu_Click(object sender, RoutedEventArgs e)
         {
-            MessageBox.Show("Раздел управления меню", "Меню",
-                MessageBoxButton.OK, MessageBoxImage.Information);
+            // NavigationService?.Navigate(new MenuAndDishesPage());
+            MessageBox.Show("Переход к меню и блюдам",
+                "Информация", MessageBoxButton.OK, MessageBoxImage.Information);
         }
 
+        // Обработчик для кнопки "Мои смены"
         private void BtnShifts_Click(object sender, RoutedEventArgs e)
         {
-            MessageBox.Show("Раздел моих смен", "Смены",
-                MessageBoxButton.OK, MessageBoxImage.Information);
+            // NavigationService?.Navigate(new ShiftsPage());
+            MessageBox.Show("Переход к моим сменам",
+                "Информация", MessageBoxButton.OK, MessageBoxImage.Information);
         }
 
+        // Обработчик для кнопки "Клиенты"
         private void BtnClients_Click(object sender, RoutedEventArgs e)
         {
-            MessageBox.Show("Раздел клиентов", "Клиенты",
-                MessageBoxButton.OK, MessageBoxImage.Information);
+            // NavigationService?.Navigate(new ClientsPage());
+            MessageBox.Show("Переход к клиентам",
+                "Информация", MessageBoxButton.OK, MessageBoxImage.Information);
         }
 
+        // Обработчик для кнопки "Выйти"
         private void BtnLogout_Click(object sender, RoutedEventArgs e)
         {
-            var result = MessageBox.Show("Вы действительно хотите выйти?",
-                "Выход",
+            // Подтверждение выхода
+            MessageBoxResult result = MessageBox.Show(
+                "Вы действительно хотите выйти из системы?",
+                "Подтверждение выхода",
                 MessageBoxButton.YesNo,
                 MessageBoxImage.Question);
 
             if (result == MessageBoxResult.Yes)
             {
+                // Очищаем текущего пользователя
                 App.CurrentUser = null;
+
+                // Возвращаемся на страницу авторизации
                 NavigationService?.Navigate(new AuthPage());
             }
         }

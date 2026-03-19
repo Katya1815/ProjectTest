@@ -8,5 +8,6 @@ namespace Restoran
         public static RestoranIs32Context Context { get; set; } = new RestoranIs32Context();
         public static Сотрудник? CurrentUser { get; set; } = null;
         public static Клиент? CurrentClient { get; set; } = null;
+
     }
 }
