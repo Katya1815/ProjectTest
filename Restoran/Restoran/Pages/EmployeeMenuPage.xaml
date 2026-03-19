@@ -22,7 +22,7 @@
                     Height="45"
                     Margin="10"
                     Click="EmployeesButton_Click"/>
-            <Button Content="Пользователи"
+            <Button Content="Клиенты"
                     Height="45"
                     Margin="10"
                     Click="BtnUsers_Click"/>
