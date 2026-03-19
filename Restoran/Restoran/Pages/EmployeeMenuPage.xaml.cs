@@ -30,5 +30,9 @@ namespace Restoran.Pages
         {
             NavigationService.Navigate(new AuthPage());
         }
+        private void EmployeesButton_Click(object sender, RoutedEventArgs e)
+        {
+            NavigationService.Navigate(new EmployeesPage());
+        }
     }
 }
