@@ -5,25 +5,89 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Restoran"
         mc:Ignorable="d"
-            Title="Сервис для ресторана" Height="700" Width="1100" MinHeight="500" MinWidth="900">
+        Title="Сервис для ресторана" 
+        Height="700" 
+        Width="1100" 
+        MinHeight="500" 
+        MinWidth="900"
+        Background="#FFF5F0">
+
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="80"/>
             <RowDefinition/>
             <RowDefinition Height="80"/>
         </Grid.RowDefinitions>
-        <Frame Grid.Row="1" x:Name="MaineFrame" NavigationUIVisibility="Hidden" ContentRendered="MainFrame_ContentRendered" Background="White"/>
-        <Grid>
+
+        <!-- Верхняя панель с градиентом -->
+        <Grid Grid.Row="0">
             <Grid.Background>
-                <LinearGradientBrush EndPoint="0,0" StartPoint="1,1">
-                    <GradientStop Color="#FFFF7F" Offset="0"/>
-                    <GradientStop  Color="GreenYellow" Offset="1"/>
+                <LinearGradientBrush EndPoint="1,0" StartPoint="0,1">
+                    <GradientStop Color="#FF9721" Offset="0.2"/>
+                    <GradientStop Color="#FFB55E" Offset="0.8"/>
                 </LinearGradientBrush>
             </Grid.Background>
+
+            <TextBlock
+                Text="{Binding ElementName=MaineFrame, Path=Content.Title}"
+                FontSize="35" 
+                Foreground="White" 
+                HorizontalAlignment="Center" 
+                VerticalAlignment="Center" 
+                FontWeight="Bold">
+                <TextBlock.Effect>
+                    <DropShadowEffect BlurRadius="15" Opacity="0.3" ShadowDepth="3"/>
+                </TextBlock.Effect>
+            </TextBlock>
         </Grid>
-        <TextBlock
-        Text="{Binding ElementName=MaineFrame, Path=Content.Title}"
-        FontSize="35" Foreground="White" HorizontalAlignment="Center" VerticalAlignment="Center" FontWeight="Bold"/>
-        <Button HorizontalAlignment="Right" Grid.Row="2" Click="BtnBack_Back" Content="Назад" x:Name="BtnBack" FontSize="20" Width="200" Height="50"/>
+
+        <!-- Основной Frame -->
+        <Frame Grid.Row="1" 
+               x:Name="MaineFrame" 
+               NavigationUIVisibility="Hidden" 
+               ContentRendered="MainFrame_ContentRendered" 
+               Background="White"
+               BorderBrush="#FF9721"
+               BorderThickness="0,1,0,1">
+            <Frame.Effect>
+                <DropShadowEffect BlurRadius="10" Opacity="0.1" ShadowDepth="2"/>
+            </Frame.Effect>
+        </Frame>
+
+        <!-- Нижняя панель -->
+        <Grid Grid.Row="2">
+            <Grid.Background>
+                <LinearGradientBrush EndPoint="1,0" StartPoint="0,1">
+                    <GradientStop Color="#FFB55E" Offset="0.2"/>
+                    <GradientStop Color="#FF9721" Offset="0.8"/>
+                </LinearGradientBrush>
+            </Grid.Background>
+
+            <Button 
+                x:Name="BtnBack"
+                HorizontalAlignment="Right" 
+                VerticalAlignment="Center"
+                Margin="0,0,30,0"
+                Click="BtnBack_Back" 
+                Content="← Назад"
+                FontSize="18"
+                FontWeight="SemiBold"
+                Width="150" 
+                Height="45"
+                Background="White"
+                Foreground="#FF9721"
+                BorderBrush="#FF9721"
+                BorderThickness="2"
+                Cursor="Hand">
+                <Button.Resources>
+                    <Style TargetType="Border">
+                        <Setter Property="CornerRadius" Value="25"/>
+                    </Style>
+                </Button.Resources>
+                <Button.Effect>
+                    <DropShadowEffect BlurRadius="10" Opacity="0.2" ShadowDepth="2"/>
+                </Button.Effect>
+            </Button>
+        </Grid>
     </Grid>
 </Window>

@@ -3,7 +3,8 @@
       xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
       Title="Личный кабинет клиента"
       Height="500" 
-      Width="800">
+      Width="800"
+      Background="#FFF5F0">
 
     <Grid Margin="20">
         <Grid.RowDefinitions>
@@ -15,54 +16,99 @@
         <StackPanel Grid.Row="0" Margin="0,0,0,20">
             <TextBlock Text="Личный кабинет клиента" 
                        FontSize="20" 
-                       FontWeight="Bold"/>
+                       FontWeight="Bold"
+                       Foreground="#FF9721"/>
             <TextBlock x:Name="TxtClientName"
                        Text="" 
                        FontSize="12"
-                       Margin="0,5,0,0"/>
+                       Margin="0,5,0,0"
+                       Foreground="#FF9721"/>
         </StackPanel>
 
         <StackPanel Grid.Row="1" Margin="0,0,0,20">
             <TextBlock Text="Меню:" 
                        FontWeight="Bold"
-                       Margin="0,0,0,10"/>
+                       Margin="0,0,0,10"
+                       Foreground="#FF9721"/>
 
             <Button Content="Мои заказы"
                     Height="30"
                     Margin="0,5"
-                    Click="BtnOrders_Click"/>
+                    Click="BtnOrders_Click"
+                    Background="#FF9721"
+                    Foreground="White"
+                    BorderThickness="0">
+                <Button.Resources>
+                    <Style TargetType="Border">
+                        <Setter Property="CornerRadius" Value="5"/>
+                    </Style>
+                </Button.Resources>
+            </Button>
 
             <Button Content="Меню ресторана"
                     Height="30"
                     Margin="0,5"
-                    Click="BtnRestaurantMenu_Click"/>
+                    Click="BtnRestaurantMenu_Click"
+                    Background="#FF9721"
+                    Foreground="White"
+                    BorderThickness="0">
+                <Button.Resources>
+                    <Style TargetType="Border">
+                        <Setter Property="CornerRadius" Value="5"/>
+                    </Style>
+                </Button.Resources>
+            </Button>
 
             <Button Content="Сделать заказ"
                     Height="30"
                     Margin="0,5"
-                    Click="BtnNewOrder_Click"/>
+                    Click="BtnNewOrder_Click"
+                    Background="#FF9721"
+                    Foreground="White"
+                    BorderThickness="0">
+                <Button.Resources>
+                    <Style TargetType="Border">
+                        <Setter Property="CornerRadius" Value="5"/>
+                    </Style>
+                </Button.Resources>
+            </Button>
         </StackPanel>
 
         <StackPanel Grid.Row="2">
             <TextBlock Text="Информация:" 
                        FontWeight="Bold"
-                       Margin="0,0,0,10"/>
+                       Margin="0,0,0,10"
+                       Foreground="#FF9721"/>
 
             <TextBlock x:Name="TxtRegistrationDate"
-                       Text="Дата регистрации: "/>
+                       Text="Дата регистрации: "
+                       Foreground="#FF9721"/>
 
             <TextBlock x:Name="TxtOrdersCount"
                        Text="Всего заказов: 0"
-                       Margin="0,5,0,0"/>
+                       Margin="0,5,0,0"
+                       Foreground="#FF9721"/>
 
-            <Separator Margin="0,15"/>
+            <Separator Margin="0,15"
+                       Background="#FF9721"
+                       Opacity="0.3"/>
 
             <Button Content="Выйти"
                     Height="30"
                     Width="100"
                     HorizontalAlignment="Left"
                     Margin="0,10,0,0"
-                    Click="BtnLogout_Click"/>
+                    Click="BtnLogout_Click"
+                    Background="Transparent"
+                    BorderBrush="#FF9721"
+                    BorderThickness="2"
+                    Foreground="#FF9721">
+                <Button.Resources>
+                    <Style TargetType="Border">
+                        <Setter Property="CornerRadius" Value="5"/>
+                    </Style>
+                </Button.Resources>
+            </Button>
         </StackPanel>
     </Grid>
 </Page>
