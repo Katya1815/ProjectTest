@@ -18,7 +18,10 @@
                     Height="45"
                     Margin="10"
                     Click="BtnMenu_Click"/>
-
+            <Button Content="Сотрудники" 
+                    Height="45"
+                    Margin="10"
+                    Click="EmployeesButton_Click"/>
             <Button Content="Пользователи"
                     Height="45"
                     Margin="10"
