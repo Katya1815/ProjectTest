@@ -16,15 +16,13 @@ namespace Restoran.Pages
             NavigationService.Navigate(new MenuPage());
         }
 
-        private void BtnOrders_Click(object sender, RoutedEventArgs e)
+        // ДОБАВЬТЕ ЭТОТ МЕТОД
+        private void BtnMyOrders_Click(object sender, System.Windows.RoutedEventArgs e)
         {
-            NavigationService.Navigate(new OrdersPage());
+            // Переход на страницу с заказами клиента
+            NavigationService?.Navigate(new ClientOrdersPage());
         }
 
-        private void BtnCart_Click(object sender, RoutedEventArgs e)
-        {
-            NavigationService.Navigate(new CartPage());
-        }
 
         private void BtnLogout_Click(object sender, RoutedEventArgs e)
         {

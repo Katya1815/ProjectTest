@@ -1,7 +1,7 @@
-﻿<Page x:Class="Restoran.Pages.UsersPage"
+﻿<Page x:Class="Restoran.Pages.ShiftsPage"
       xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
       xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-      Title="Клиенты"
+      Title="Смены сотрудников"
       Background="#FFF5F0">
 
     <Grid Margin="20">
@@ -13,16 +13,16 @@
 
         <!-- Заголовок -->
         <TextBlock Grid.Row="0"
-                   Text="УПРАВЛЕНИЕ КЛИЕНТАМИ"
+                   Text="УПРАВЛЕНИЕ СМЕНАМИ"
                    FontSize="28"
                    FontWeight="Bold"
                    Foreground="#FF9721"
                    HorizontalAlignment="Center"
                    Margin="0,0,0,20"/>
 
-        <!-- Таблица клиентов -->
+        <!-- Таблица смен -->
         <DataGrid Grid.Row="1"
-                  x:Name="UsersDataGrid"
+                  x:Name="ShiftsDataGrid"
                   AutoGenerateColumns="False"
                   CanUserAddRows="False"
                   IsReadOnly="True"
@@ -76,9 +76,9 @@
             </DataGrid.Resources>
 
             <DataGrid.Columns>
-                <!-- ID клиента -->
-                <DataGridTextColumn Header="ID" 
-                                    Binding="{Binding IdКлиента}" 
+                <!-- № колонка (ID) -->
+                <DataGridTextColumn Header="№" 
+                                    Binding="{Binding id_смены}" 
                                     Width="55">
                     <DataGridTextColumn.ElementStyle>
                         <Style TargetType="TextBlock">
@@ -89,10 +89,10 @@
                     </DataGridTextColumn.ElementStyle>
                 </DataGridTextColumn>
 
-                <!-- Фамилия -->
-                <DataGridTextColumn Header="Фамилия" 
-                                    Binding="{Binding Фамилия}" 
-                                    Width="130">
+                <!-- Сотрудник -->
+                <DataGridTextColumn Header="Сотрудник" 
+                                    Binding="{Binding EmployeeName}" 
+                                    Width="200">
                     <DataGridTextColumn.ElementStyle>
                         <Style TargetType="TextBlock">
                             <Setter Property="HorizontalAlignment" Value="Left"/>
@@ -102,22 +102,10 @@
                     </DataGridTextColumn.ElementStyle>
                 </DataGridTextColumn>
 
-                <!-- Имя -->
-                <DataGridTextColumn Header="Имя" 
-                                    Binding="{Binding Имя}" 
-                                    Width="120">
-                    <DataGridTextColumn.ElementStyle>
-                        <Style TargetType="TextBlock">
-                            <Setter Property="HorizontalAlignment" Value="Left"/>
-                            <Setter Property="Foreground" Value="#333333"/>
-                        </Style>
-                    </DataGridTextColumn.ElementStyle>
-                </DataGridTextColumn>
-
-                <!-- Отчество -->
-                <DataGridTextColumn Header="Отчество" 
-                                    Binding="{Binding Отчество}" 
-                                    Width="120">
+                <!-- Должность -->
+                <DataGridTextColumn Header="Должность" 
+                                    Binding="{Binding Position}" 
+                                    Width="150">
                     <DataGridTextColumn.ElementStyle>
                         <Style TargetType="TextBlock">
                             <Setter Property="HorizontalAlignment" Value="Left"/>
@@ -126,10 +114,10 @@
                     </DataGridTextColumn.ElementStyle>
                 </DataGridTextColumn>
 
-                <!-- Дата регистрации -->
-                <DataGridTextColumn Header="Дата регистрации" 
-                                    Binding="{Binding ДатаРегистрацииВСистеме, StringFormat={}{0:dd.MM.yyyy}}" 
-                                    Width="120">
+                <!-- Дата -->
+                <DataGridTextColumn Header="Дата" 
+                                    Binding="{Binding дата_смены, StringFormat={}{0:dd.MM.yyyy}}" 
+                                    Width="110">
                     <DataGridTextColumn.ElementStyle>
                         <Style TargetType="TextBlock">
                             <Setter Property="HorizontalAlignment" Value="Center"/>
@@ -138,15 +126,39 @@
                     </DataGridTextColumn.ElementStyle>
                 </DataGridTextColumn>
 
-                <!-- Примечания -->
-                <DataGridTextColumn Header="Примечания" 
-                                    Binding="{Binding Примечания}" 
-                                    Width="*">
+                <!-- Начало -->
+                <DataGridTextColumn Header="Начало" 
+                                    Binding="{Binding начало_смены, StringFormat={}{0:HH\\:mm}}" 
+                                    Width="80">
                     <DataGridTextColumn.ElementStyle>
                         <Style TargetType="TextBlock">
-                            <Setter Property="HorizontalAlignment" Value="Left"/>
-                            <Setter Property="Foreground" Value="#666666"/>
-                            <Setter Property="TextTrimming" Value="CharacterEllipsis"/>
+                            <Setter Property="HorizontalAlignment" Value="Center"/>
+                            <Setter Property="Foreground" Value="#333333"/>
+                        </Style>
+                    </DataGridTextColumn.ElementStyle>
+                </DataGridTextColumn>
+
+                <!-- Конец -->
+                <DataGridTextColumn Header="Конец" 
+                                    Binding="{Binding конец_смены, StringFormat={}{0:HH\\:mm}}" 
+                                    Width="80">
+                    <DataGridTextColumn.ElementStyle>
+                        <Style TargetType="TextBlock">
+                            <Setter Property="HorizontalAlignment" Value="Center"/>
+                            <Setter Property="Foreground" Value="#333333"/>
+                        </Style>
+                    </DataGridTextColumn.ElementStyle>
+                </DataGridTextColumn>
+
+                <!-- Продолжительность -->
+                <DataGridTextColumn Header="Продолжительность" 
+                                    Binding="{Binding Duration}" 
+                                    Width="130">
+                    <DataGridTextColumn.ElementStyle>
+                        <Style TargetType="TextBlock">
+                            <Setter Property="HorizontalAlignment" Value="Center"/>
+                            <Setter Property="FontWeight" Value="Bold"/>
+                            <Setter Property="Foreground" Value="#FF9721"/>
                         </Style>
                     </DataGridTextColumn.ElementStyle>
                 </DataGridTextColumn>
@@ -159,11 +171,11 @@
                     HorizontalAlignment="Center"
                     Margin="0,10,0,0">
 
-            <Button Content="➕ Добавить клиента"
+            <Button Content="➕ Добавить смену"
                     Width="150"
                     Height="40"
                     Margin="5"
-                    Click="AddClient_Click"
+                    Click="BtnAddShift_Click"
                     Background="#FF9721"
                     Foreground="White"
                     BorderThickness="0"
@@ -180,7 +192,7 @@
                     Width="150"
                     Height="40"
                     Margin="5"
-                    Click="EditClient_Click"
+                    Click="BtnEditShift_Click"
                     Background="#FF9721"
                     Foreground="White"
                     BorderThickness="0"
@@ -197,7 +209,7 @@
                     Width="150"
                     Height="40"
                     Margin="5"
-                    Click="DeleteClient_Click"
+                    Click="BtnDeleteShift_Click"
                     Background="#FF9721"
                     Foreground="White"
                     BorderThickness="0"
@@ -214,7 +226,7 @@
                     Width="150"
                     Height="40"
                     Margin="5"
-                    Click="Refresh_Click"
+                    Click="BtnRefresh_Click"
                     Background="#FF9721"
                     Foreground="White"
                     BorderThickness="0"

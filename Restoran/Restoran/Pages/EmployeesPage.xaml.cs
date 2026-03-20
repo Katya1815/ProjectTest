@@ -394,6 +394,7 @@ namespace Restoran.Pages
                     MessageBoxButton.OK, MessageBoxImage.Error);
             }
         }
+
         private void EditEmployee_Click(object sender, RoutedEventArgs e)
         {
             var selectedEmployee = EmployeesDataGrid.SelectedItem as Сотрудник;
@@ -405,9 +406,10 @@ namespace Restoran.Pages
                 return;
             }
 
+            // Создаем окно для редактирования
             var dialog = new Window
             {
-                Title = "Редактирование сотрудника",
+                Title = $"Редактирование сотрудника {selectedEmployee.Фамилия} {selectedEmployee.Имя}",
                 Width = 400,
                 Height = 650,
                 WindowStartupLocation = WindowStartupLocation.CenterOwner,
@@ -418,82 +420,77 @@ namespace Restoran.Pages
             var scrollViewer = new ScrollViewer();
             var stackPanel = new StackPanel { Margin = new Thickness(20) };
 
-            // --- Фамилия ---
-            stackPanel.Children.Add(new TextBlock { Text = "Фамилия:", FontWeight = FontWeights.Bold, Foreground = System.Windows.Media.Brushes.Orange });
-            var txtLastName = new TextBox { Text = selectedEmployee.Фамилия, Margin = new Thickness(0, 5, 0, 10), Height = 30 };
-            stackPanel.Children.Add(txtLastName);
+            // Поля редактирования (аналогично добавлению)
+            TextBox txtLastName = new TextBox { Text = selectedEmployee.Фамилия, Height = 30, Margin = new Thickness(0, 0, 0, 10) };
+            TextBox txtFirstName = new TextBox { Text = selectedEmployee.Имя, Height = 30, Margin = new Thickness(0, 0, 0, 10) };
+            TextBox txtMiddleName = new TextBox { Text = selectedEmployee.Отчество, Height = 30, Margin = new Thickness(0, 0, 0, 10) };
+            TextBox txtLogin = new TextBox { Text = selectedEmployee.Логин, Height = 30, Margin = new Thickness(0, 0, 0, 10) };
+            PasswordBox txtPassword = new PasswordBox { Password = selectedEmployee.Пароль, Height = 30, Margin = new Thickness(0, 0, 0, 10) };
+            TextBox txtPhone = new TextBox { Text = selectedEmployee.НомерТелефона, Height = 30, Margin = new Thickness(0, 0, 0, 10) };
 
-            // --- Имя ---
-            stackPanel.Children.Add(new TextBlock { Text = "Имя:", FontWeight = FontWeights.Bold, Foreground = System.Windows.Media.Brushes.Orange });
-            var txtFirstName = new TextBox { Text = selectedEmployee.Имя, Margin = new Thickness(0, 5, 0, 10), Height = 30 };
-            stackPanel.Children.Add(txtFirstName);
-
-            // --- Отчество ---
-            stackPanel.Children.Add(new TextBlock { Text = "Отчество:", FontWeight = FontWeights.Bold, Foreground = System.Windows.Media.Brushes.Orange });
-            var txtMiddleName = new TextBox { Text = selectedEmployee.Отчество, Margin = new Thickness(0, 5, 0, 10), Height = 30 };
-            stackPanel.Children.Add(txtMiddleName);
-
-            // --- Логин ---
-            stackPanel.Children.Add(new TextBlock { Text = "Логин:", FontWeight = FontWeights.Bold, Foreground = System.Windows.Media.Brushes.Orange });
-            var txtLogin = new TextBox { Text = selectedEmployee.Логин, Margin = new Thickness(0, 5, 0, 10), Height = 30 };
-            stackPanel.Children.Add(txtLogin);
-
-            // --- Пароль ---
-            stackPanel.Children.Add(new TextBlock { Text = "Пароль:", FontWeight = FontWeights.Bold, Foreground = System.Windows.Media.Brushes.Orange });
-            var txtPassword = new PasswordBox { Password = selectedEmployee.Пароль, Margin = new Thickness(0, 5, 0, 10), Height = 30 };
-            stackPanel.Children.Add(txtPassword);
-
-            // --- Телефон ---
-            stackPanel.Children.Add(new TextBlock { Text = "Телефон:", FontWeight = FontWeights.Bold, Foreground = System.Windows.Media.Brushes.Orange });
-            var txtPhone = new TextBox { Text = selectedEmployee.НомерТелефона, Margin = new Thickness(0, 5, 0, 10), Height = 30 };
-            stackPanel.Children.Add(txtPhone);
-
-            // --- Дата рождения ---
-            stackPanel.Children.Add(new TextBlock { Text = "Дата рождения:", FontWeight = FontWeights.Bold, Foreground = System.Windows.Media.Brushes.Orange });
-
-            var datePanel = new StackPanel { Orientation = Orientation.Horizontal, Margin = new Thickness(0, 0, 0, 10) };
-            var txtDay = new TextBox { Width = 50, Height = 30, HorizontalContentAlignment = HorizontalAlignment.Center };
-            var txtMonth = new TextBox { Width = 50, Height = 30, HorizontalContentAlignment = HorizontalAlignment.Center };
-            var txtYear = new TextBox { Width = 70, Height = 30, HorizontalContentAlignment = HorizontalAlignment.Center };
+            // Дата рождения
+            TextBox txtDay = new TextBox { Width = 50, HorizontalContentAlignment = HorizontalAlignment.Center };
+            TextBox txtMonth = new TextBox { Width = 50, HorizontalContentAlignment = HorizontalAlignment.Center };
+            TextBox txtYear = new TextBox { Width = 70, HorizontalContentAlignment = HorizontalAlignment.Center };
 
             if (selectedEmployee.ДатаРождения.HasValue)
             {
-                txtDay.Text = selectedEmployee.ДатаРождения.Value.Day.ToString("D2");
-                txtMonth.Text = selectedEmployee.ДатаРождения.Value.Month.ToString("D2");
-                txtYear.Text = selectedEmployee.ДатаРождения.Value.Year.ToString();
+                var dob = selectedEmployee.ДатаРождения.Value;
+                txtDay.Text = dob.Day.ToString("D2");
+                txtMonth.Text = dob.Month.ToString("D2");
+                txtYear.Text = dob.Year.ToString();
             }
 
-            datePanel.Children.Add(new TextBlock { Text = "День:", VerticalAlignment = VerticalAlignment.Center, Margin = new Thickness(0, 0, 5, 0) });
+            // Панель для даты
+            var datePanel = new StackPanel { Orientation = Orientation.Horizontal, Margin = new Thickness(0, 0, 0, 10) };
+            datePanel.Children.Add(new TextBlock { Text = "День:" });
             datePanel.Children.Add(txtDay);
-            datePanel.Children.Add(new TextBlock { Text = "Месяц:", VerticalAlignment = VerticalAlignment.Center, Margin = new Thickness(10, 0, 5, 0) });
+            datePanel.Children.Add(new TextBlock { Text = "Месяц:", Margin = new Thickness(10, 0, 5, 0) });
             datePanel.Children.Add(txtMonth);
-            datePanel.Children.Add(new TextBlock { Text = "Год:", VerticalAlignment = VerticalAlignment.Center, Margin = new Thickness(10, 0, 5, 0) });
+            datePanel.Children.Add(new TextBlock { Text = "Год:", Margin = new Thickness(10, 0, 5, 0) });
             datePanel.Children.Add(txtYear);
 
-            stackPanel.Children.Add(datePanel);
+            // ComboBox для должности
+            var cmbPosition = new ComboBox
+            {
+                ItemsSource = db.Должностиs.ToList(),
+                DisplayMemberPath = "НаименованиеДолжности",
+                SelectedValuePath = "IdДолжности",
+                Height = 30,
+                Margin = new Thickness(0, 0, 0, 10)
+            };
+            cmbPosition.SelectedValue = selectedEmployee.IdДолжности;
 
-            // --- Должность ---
-            stackPanel.Children.Add(new TextBlock { Text = "Должность:", FontWeight = FontWeights.Bold, Foreground = System.Windows.Media.Brushes.Orange });
-            var cmbPosition = new ComboBox { DisplayMemberPath = "НаименованиеДолжности", Margin = new Thickness(0, 0, 0, 10), Height = 30 };
-            var positions = db.Должностиs.ToList();
-            cmbPosition.ItemsSource = positions;
-            if (selectedEmployee.IdДолжности.HasValue)
-                cmbPosition.SelectedItem = positions.FirstOrDefault(p => p.IdДолжности == selectedEmployee.IdДолжности);
-            stackPanel.Children.Add(cmbPosition);
+            // ComboBox для роли
+            var cmbRole = new ComboBox
+            {
+                ItemsSource = db.Ролиs.ToList(),
+                DisplayMemberPath = "НаименованиеРоли",
+                SelectedValuePath = "IdРоли",
+                Height = 30,
+                Margin = new Thickness(0, 0, 0, 20)
+            };
+            cmbRole.SelectedValue = selectedEmployee.IdРоли;
 
-            // --- Роль ---
-            stackPanel.Children.Add(new TextBlock { Text = "Роль:", FontWeight = FontWeights.Bold, Foreground = System.Windows.Media.Brushes.Orange });
-            var cmbRole = new ComboBox { DisplayMemberPath = "НаименованиеРоли", Margin = new Thickness(0, 0, 0, 20), Height = 30 };
-            var roles = db.Ролиs.ToList();
-            cmbRole.ItemsSource = roles;
-            if (selectedEmployee.IdРоли.HasValue)
-                cmbRole.SelectedItem = roles.FirstOrDefault(r => r.IdРоли == selectedEmployee.IdРоли);
-            stackPanel.Children.Add(cmbRole);
+            // Добавляем все элементы в stackPanel
+            stackPanel.Children.Add(new TextBlock { Text = "Фамилия:" }); stackPanel.Children.Add(txtLastName);
+            stackPanel.Children.Add(new TextBlock { Text = "Имя:" }); stackPanel.Children.Add(txtFirstName);
+            stackPanel.Children.Add(new TextBlock { Text = "Отчество:" }); stackPanel.Children.Add(txtMiddleName);
+            stackPanel.Children.Add(new TextBlock { Text = "Логин:" }); stackPanel.Children.Add(txtLogin);
+            stackPanel.Children.Add(new TextBlock { Text = "Пароль:" }); stackPanel.Children.Add(txtPassword);
+            stackPanel.Children.Add(new TextBlock { Text = "Телефон:" }); stackPanel.Children.Add(txtPhone);
+            stackPanel.Children.Add(new TextBlock { Text = "Дата рождения:" }); stackPanel.Children.Add(datePanel);
+            stackPanel.Children.Add(new TextBlock { Text = "Должность:" }); stackPanel.Children.Add(cmbPosition);
+            stackPanel.Children.Add(new TextBlock { Text = "Роль:" }); stackPanel.Children.Add(cmbRole);
 
-            // --- Кнопки ---
+            // Кнопки
             var btnPanel = new StackPanel { Orientation = Orientation.Horizontal, HorizontalAlignment = HorizontalAlignment.Center };
-            var btnSave = new Button { Content = "Сохранить", Width = 100, Height = 35, Margin = new Thickness(5), Background = System.Windows.Media.Brushes.Orange, Foreground = System.Windows.Media.Brushes.White, BorderThickness = new Thickness(0) };
-            var btnCancel = new Button { Content = "Отмена", Width = 100, Height = 35, Margin = new Thickness(5), Background = System.Windows.Media.Brushes.LightGray, Foreground = System.Windows.Media.Brushes.Black, BorderThickness = new Thickness(0) };
+            var btnSave = new Button { Content = "Сохранить", Width = 100, Height = 35, Margin = new Thickness(5) };
+            var btnCancel = new Button { Content = "Отмена", Width = 100, Height = 35, Margin = new Thickness(5) };
+            btnPanel.Children.Add(btnSave); btnPanel.Children.Add(btnCancel);
+            stackPanel.Children.Add(btnPanel);
+
+            btnCancel.Click += (s, args) => dialog.Close();
 
             btnSave.Click += (s, args) =>
             {
@@ -506,22 +503,17 @@ namespace Restoran.Pages
                     return;
                 }
 
-                // Обработка даты рождения
+                // Обработка даты
                 DateOnly? birthDate = null;
-                if (!string.IsNullOrWhiteSpace(txtDay.Text) &&
-                    !string.IsNullOrWhiteSpace(txtMonth.Text) &&
-                    !string.IsNullOrWhiteSpace(txtYear.Text))
+                if (!string.IsNullOrWhiteSpace(txtDay.Text) && !string.IsNullOrWhiteSpace(txtMonth.Text) && !string.IsNullOrWhiteSpace(txtYear.Text))
                 {
                     try
                     {
-                        int day = int.Parse(txtDay.Text);
-                        int month = int.Parse(txtMonth.Text);
-                        int year = int.Parse(txtYear.Text);
-                        birthDate = new DateOnly(year, month, day);
+                        birthDate = new DateOnly(int.Parse(txtYear.Text), int.Parse(txtMonth.Text), int.Parse(txtDay.Text));
                     }
                     catch
                     {
-                        MessageBox.Show("Введите корректную дату рождения", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Warning);
+                        MessageBox.Show("Некорректная дата рождения", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Warning);
                         return;
                     }
                 }
@@ -534,20 +526,15 @@ namespace Restoran.Pages
                 selectedEmployee.Пароль = txtPassword.Password;
                 selectedEmployee.НомерТелефона = txtPhone.Text;
                 selectedEmployee.ДатаРождения = birthDate;
-                selectedEmployee.IdДолжности = ((Должности)cmbPosition.SelectedItem).IdДолжности;
-                selectedEmployee.IdРоли = ((Роли)cmbRole.SelectedItem).IdРоли;
+                selectedEmployee.IdДолжности = (int)cmbPosition.SelectedValue;
+                selectedEmployee.IdРоли = (int)cmbRole.SelectedValue;
 
                 db.SaveChanges();
                 LoadEmployees();
                 dialog.Close();
+
                 MessageBox.Show("Сотрудник обновлен", "Успех", MessageBoxButton.OK, MessageBoxImage.Information);
             };
-
-            btnCancel.Click += (s, args) => dialog.Close();
-
-            btnPanel.Children.Add(btnSave);
-            btnPanel.Children.Add(btnCancel);
-            stackPanel.Children.Add(btnPanel);
 
             scrollViewer.Content = stackPanel;
             dialog.Content = scrollViewer;
